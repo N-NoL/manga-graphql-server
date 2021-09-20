@@ -1,0 +1,398 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Comment {
+  opinionsId: ID!
+  id: ID!
+  rootId: ID
+  parentId: ID
+  level: Int
+  user: User!
+  userId: ID
+  votesUp: Int!
+  votesDown: Int!
+  deleted: Boolean!
+  text: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Rating {
+  id: ID!
+  userId: ID!
+  opinionsId: ID!
+  value: Float!
+  opinions: Opinions!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Opinions {
+  id: ID!
+  ratingAverage: Float!
+  ratingCount: Int!
+}
+
+type Option {
+  id: ID!
+  option_name: String!
+
+  """enum <Type | Status  | TranslateStatus | Format | Genre | Tag>"""
+  option_type: String!
+}
+
+type News {
+  id: ID!
+  views: Int!
+  title: String!
+  author: User!
+  authorId: ID!
+  opinions: Opinions!
+  opinionsId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  image: String!
+  text: String!
+}
+
+type Images {
+  id: ID!
+  views: Int!
+  title: String!
+  author: User!
+  authorId: ID!
+  opinions: Opinions!
+  opinionsId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  images: [String!]!
+}
+
+type Review {
+  id: ID!
+  views: Int!
+  title: String!
+  author: User!
+  authorId: ID!
+  opinions: Opinions!
+  opinionsId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  manga: Manga!
+  mangaId: ID!
+  text: String!
+}
+
+type Collection {
+  id: ID!
+  views: Int!
+  title: String!
+  author: User!
+  authorId: ID!
+  opinions: Opinions!
+  opinionsId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  image: String!
+  mangaList: [Manga!]!
+  text: String!
+}
+
+type AnyPost {
+  id: ID!
+  views: Int!
+  title: String!
+  author: User!
+  authorId: ID!
+  opinions: Opinions!
+  opinionsId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  image: String
+  text: String
+  manga: Manga
+  mangaId: ID
+  images: [String!]
+  mangaList: [Manga!]
+}
+
+type Manga {
+  id: ID!
+  russian_name: String!
+  english_name: String!
+  original_name: String!
+  another_names: [String!]
+  releaseDate: Int!
+  summary: String!
+  genres: [Option!]!
+  tags: [Option!]!
+  formats: [Option!]!
+  type: Option!
+  status: Option!
+  translateStatus: Option!
+  reviews: [Review!]!
+  chapters: [Chapter!]!
+  views: Int!
+  opinions: Opinions!
+  paper: String!
+  oldLimit: String
+  translators: [String!]!
+  publishers: [String!]!
+  illustrators: [String!]!
+  screenwriters: [String!]!
+  slug: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  lastChapter: Chapter
+  chapterCount: Int!
+}
+
+type Chapter {
+  id: ID!
+  volume: Int!
+  chapter: Float!
+  name: String!
+  images: [ChapterImage!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  mangaId: ID!
+}
+
+type ChapterImage {
+  w: Int!
+  h: Int!
+  url: String!
+}
+
+type Bookmark {
+  id: ID!
+  chapterId: ID!
+  mangaId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Friend {
+  id: ID!
+  senderId: ID!
+  receiverId: ID!
+  sender: User!
+  receiver: User!
+  status: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type User {
+  id: ID!
+  email: String!
+  name: String!
+  status: String!
+  gender: String!
+  avatar: String!
+  cover: String!
+  subscriptions: [Manga!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type AuthType {
+  user: User!
+  token: String!
+}
+
+type Query {
+  user(email: String, id: ID): User!
+  me: User!
+  mangaList: [Manga!]!
+  mangaFiltredList(includeTag: [ID!], excludeTag: [ID!], includeGenre: [ID!], excludeGenre: [ID!], type: [ID!], formats: [ID!], status: [ID!], translateStatus: [ID!], take: Int!, skip: Int!, sort: String!, dir: String!, name: String!, lastUpdate: Boolean = false): [Manga!]!
+  manga(id: ID!): Manga!
+  chapters(mangaId: ID!): [Chapter!]!
+  chapter(id: ID!): Chapter!
+  options(optionType: String!): [Option!]!
+  option(optionType: String!, id: Int!): Option!
+  bookmarks: [Bookmark!]!
+  bookmark(mangaId: ID!): Bookmark!
+  friends(userId: ID!, friendStatus: String!): [Friend!]!
+  friend(userId_2: ID!, userId_1: ID!): Friend!
+  comments(opinionsId: ID): [Comment!]!
+  comment(id: ID!): [Comment!]!
+  rating(opinionsId: ID!): Rating!
+  posts(type: String): [AnyPost!]!
+}
+
+type Mutation {
+  updateMyProfile(updateUserData: UpdateUserInput!): User!
+  login(data: AuthInput!): AuthType!
+  registration(data: CreateUserInput!): AuthType!
+  createManga(data: CreateMangaInput!): Manga!
+  updateManga(data: UpdateMangaInput!): Manga!
+  removeManga(id: ID!): Manga!
+  subscribe(mangaId: ID!): Manga!
+  createChapter(data: CreateChapterInput!): Chapter!
+  updateChapter(data: UpdateChapterInput!): Chapter!
+  removeChapter(id: ID!): Chapter!
+  createOption(data: CreateOptionInput!): Option!
+  updateOption(data: UpdateOptionInput!): Option!
+  removeOption(optionType: String!, id: ID!): Option!
+  setBookmark(chapterId: ID!): Bookmark!
+  removeBookmark(bookmarkId: ID!): Bookmark!
+  createFriend(userId: ID!): Friend!
+  removeFriend(userId: ID!): Friend!
+  createComment(data: CreateCommentInput!): Comment!
+  updateComment(data: UpdateCommentInput!): Comment!
+  removeComment(id: ID!): Comment!
+  toVote(vote: String!, id: ID!): Comment!
+  setRating(data: RatingInput!): Rating!
+  createNews(data: CreateNewsInput): News!
+  createImages(data: CreateImagesInput): Images!
+  createReview(data: CreateReviewInput): Review!
+  createCollection(data: CreateCollectionInput): Collection!
+}
+
+input UpdateUserInput {
+  email: String
+  name: String
+  password: String
+  gender: String = "other"
+  avatar: String = "https://play-lh.googleusercontent.com/OswGqQjy3425Q_OYu9wULKybYm3F7Gb9yhgnO2ov8CZMXhKhgihGd584-Odu3bbRPWg=s180"
+  cover: String = "https://2.bp.blogspot.com/-YSRL7xmCD2Q/XQ8eHaJ9wkI/AAAAAAAAHtA/0-bVcL3HJmQ4eCCCJY8Sq9y0tGKoVw3IwCKgBGAs/w3840-h1600-p-k-no-nu/genshin-impact-uhdpaper.com-4K-1.jpg"
+}
+
+input AuthInput {
+  email: String!
+  password: String!
+}
+
+input CreateUserInput {
+  email: String!
+  name: String!
+  password: String!
+  gender: String = "other"
+  avatar: String = "https://play-lh.googleusercontent.com/OswGqQjy3425Q_OYu9wULKybYm3F7Gb9yhgnO2ov8CZMXhKhgihGd584-Odu3bbRPWg=s180"
+  cover: String = "https://2.bp.blogspot.com/-YSRL7xmCD2Q/XQ8eHaJ9wkI/AAAAAAAAHtA/0-bVcL3HJmQ4eCCCJY8Sq9y0tGKoVw3IwCKgBGAs/w3840-h1600-p-k-no-nu/genshin-impact-uhdpaper.com-4K-1.jpg"
+}
+
+input CreateMangaInput {
+  russian_name: String!
+  english_name: String!
+  original_name: String!
+  another_names: [String!]!
+  releaseDate: Int!
+  summary: String!
+  genres: [ID!]!
+  tags: [ID!]!
+  formats: [ID!]!
+  type: ID!
+  paper: String!
+  status: ID!
+  translateStatus: ID!
+  oldLimit: String
+  translators: [String!]!
+  publishers: [String!]!
+  illustrators: [String!]!
+  screenwriters: [String!]!
+  slug: String!
+}
+
+input UpdateMangaInput {
+  russian_name: String
+  english_name: String
+  original_name: String
+  another_names: [String!]
+  releaseDate: Int
+  summary: String
+  genres: [ID!]
+  tags: [ID!]
+  formats: [ID!]
+  type: ID
+  paper: String
+  status: ID
+  translateStatus: ID
+  oldLimit: String
+  translators: [String!]
+  publishers: [String!]
+  illustrators: [String!]
+  screenwriters: [String!]
+  slug: String
+  id: ID!
+}
+
+input CreateChapterInput {
+  volume: Int!
+  chapter: Float!
+  name: String!
+  images: [JSON!]!
+  mangaId: ID!
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+input UpdateChapterInput {
+  volume: Int
+  chapter: Float
+  name: String
+  images: [JSON!]
+  mangaId: ID
+  id: ID!
+}
+
+input CreateOptionInput {
+  option_name: String!
+  option_type: String!
+}
+
+input UpdateOptionInput {
+  option_name: String!
+  option_type: String!
+  id: ID!
+}
+
+input CreateCommentInput {
+  opinionsId: ID
+  parentId: ID
+  text: String!
+}
+
+input UpdateCommentInput {
+  id: ID!
+  text: String!
+}
+
+input RatingInput {
+  opinionsId: ID!
+  value: Float!
+}
+
+input CreateNewsInput {
+  title: String!
+  image: String!
+  text: String!
+}
+
+input CreateImagesInput {
+  title: String!
+  images: [String!]!
+}
+
+input CreateReviewInput {
+  title: String!
+  mangaId: ID!
+  text: String!
+}
+
+input CreateCollectionInput {
+  title: String!
+  image: String!
+  mangaIds: [ID!]!
+  text: String!
+}

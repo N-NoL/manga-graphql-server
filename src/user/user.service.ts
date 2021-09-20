@@ -1,26 +1,31 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
+import { User } from './entities/user.entity';
+import { pickBy, identity } from 'lodash';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
-  create(createUserInput: CreateUserInput) {
-    return 'This action adds a new user';
+  constructor(
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+  ) {}
+
+  async findOne(data: { id?: string; email?: string }): Promise<User> {
+    return this.userRepository.findOne(pickBy(data, identity));
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async create(data: CreateUserInput): Promise<User> {
+    data.password = await bcrypt.hash(data.password, 10);
+    return this.userRepository.save(data);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
-
-  update(id: number, updateUserInput: UpdateUserInput) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async update(id, data: UpdateUserInput): Promise<User> {
+    const user = await this.userRepository.findOne(id);
+    if (user) return this.userRepository.save({ ...user, ...data });
+    throw new Error('user with this id does not exist');
   }
 }

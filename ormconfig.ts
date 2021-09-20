@@ -1,15 +1,16 @@
 import { ConnectionOptions } from 'typeorm/connection/ConnectionOptions';
 
-const config: ConnectionOptions = {
-  type: 'postgres',
-  host: '127.0.0.1',
-  port: 5432,
-  username: 'postgres',
-  password: 'oleg14096',
-  database: 'manga',
-  entities: ['dist/**/*.entity{.ts,.js}'],
-  subscribers: ['dist/**/*.subscriber{.ts,.js}'],
-  synchronize: true,
-};
-
+function config(): ConnectionOptions {
+  return {
+    type: 'postgres',
+    host: process.env.DATABASE_HOST,
+    port: +process.env.DATABASE_PORT,
+    username: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
+    database: process.env.DATABASE_NAME,
+    entities: ['dist/**/*.entity{.ts,.js}'],
+    subscribers: ['dist/**/*.subscriber{.ts,.js}'],
+    synchronize: true,
+  };
+}
 export default config;
